@@ -156,29 +156,28 @@ var randomNumber = function(min, max) {
   var shop = function() {
     // ask player what they'd like to do
     var shopOptionPrompt = window.prompt(
-      'Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one "REFILL", "UPGRADE", or "LEAVE" to make a choice.'
-    );
-  
+      'Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? You get to pick one option: 1 to REFILL(20 health), 2 for UPGRADE(+6 attack), or 3 to LEAVE the store.'
+      );
+    
+    // parseInt() converts string into integers,, Here, we are converting the input given in the window.prompt(above), to an integer if possible.
+    // If not possible, a window.prompt will ask us to re-enter the input
+    shopOptionPrompt = parseInt(shopOptionPrompt);
+
     // use switch case to carry out action
     switch (shopOptionPrompt) {
-      case 'REFILL':
-      case 'refill':
+      case 1:
         playerInfo.refillHealth();
+        window.alert(playerInfo.name + " now has " + playerInfo.health + " health remaining.")
         break;
-      case 'UPGRADE':
-      case 'upgrade':
+      case 2:
         playerInfo.upgradeAttack();
+        window.alert(playerInfo.name + " can now deal a maximum of " + playerInfo.attack + " damage.")
         break;
-      case 'LEAVE':
-      case 'leave':
+      case 3:
         window.alert('Leaving the store.');
-  
-        // do nothing, so function will end
         break;
       default:
         window.alert('You did not pick a valid option. Try again.');
-  
-        // call shop() again to force player to pick a valid option
         shop();
         break;
     }
@@ -250,10 +249,10 @@ var randomNumber = function(min, max) {
     }
   ];
   
-  console.log(enemyInfo);
-  console.log(enemyInfo[0]);
-  console.log(enemyInfo[0].name);
-  console.log(enemyInfo[0]['attack']);
+//   console.log(enemyInfo);
+//   console.log(enemyInfo[0]);
+//   console.log(enemyInfo[0].name);
+//   console.log(enemyInfo[0]['attack']);
   
   /* END GAME INFORMATION / VARIABLES */
   
