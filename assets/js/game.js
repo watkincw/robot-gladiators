@@ -139,7 +139,7 @@ var shop = function() {
     // ask the player what they'd like to do
     var shopOptionPromt = window.prompt(
         "Would you like to REFILL you health, UPGRADE your attack, or LEAVE the shop? Please enter one: 'REFILL', 'UPGRADE', or , 'LEAVE' to make a choice."
-    );
+        );
 
     // using a 'switch' statment to carry out action
     switch(shopOptionPromt) {         
