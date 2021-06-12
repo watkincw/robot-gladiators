@@ -51,11 +51,14 @@ var fight = function(enemy) {
     while (playerInfo.health > 0 && enemy.health > 0) {
         // If it is the player-robot's turn:
         if (isPlayerTurn) { 
+            // // The following 5 lines code were removed because, if the enemy attacked first, the player would not get a chance to choose to fight or skip before dealing damage to the player
+            // // This was fixed by moving the fightOrSkip() call to the startGame() function, right before fight(pickedEnemyObject)
             // Prompt the fight or skip request
-            if (fightOrSkip()) { 
-                // if true, leave fight by breaking loop
-                break;
-            }        
+            // if (fightOrSkip()) { 
+            //     // if true, leave fight by breaking loop
+            //     break;
+            // } 
+
             // If player chose to fight, remove damage from enemy-robot's health; reduce enemy.health by damage dealt
             var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
             enemy.health = Math.max(0, enemy.health - damage);
@@ -122,9 +125,23 @@ var startGame = function() {
     
             // set health for picked enemy
             pickedEnemyObj.health = randomNumber(40, 60);
-    
-            // pass the pickedEnemyObj object variable's value into the fight function, where it will assume the value of the enemy parameter
-            fight(pickedEnemyObj);
+            
+            // **OLD CODE**
+            //// pass the pickedEnemyObj object variable's value into the fight function, where it will assume the value of the enemy parameter
+            // fight(pickedEnemyObj);
+            // **OLD CODE END**
+            // **NEW CODE**
+            // *****There was an issue where, if the enemy attacks first, he would attack before the player had the option to fight/skip the battle *****
+            // *****Some code was moved around so, if the enemy attacks first, the player gets still gets to decide wheather or not to skip the fight BEFORE the enemy attacks *****
+            if (fightOrSkip()) { 
+                //// if true, leave fight by breaking loop
+                // break;
+            } 
+            else { 
+                fight(pickedEnemyObj);
+            }
+            // fight(pickedEnemyObj);
+            // **NEW CODE END**
     
             // if player is still alive and we're not at the last enemy in the array
             if (playerInfo.health > 0 && i < enemyInfo.length - 1) {
@@ -153,19 +170,41 @@ var endGame = function() {
 
     // if player is still alive, player wins!
     if (playerInfo.health > 0) {
-    window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money + '.');
+        // When the game has ended AND we've survived facing all the robots:
+        window.alert("Great job, you've survived the game! You ended the game with a score of " + playerInfo.money + '.');
+        // declare high score var; retrieve the current high score from localStorage, if it's not there, use 0
+        var highScore = localStorage.getItem("highScore");
+        if (highScore === null) { 
+            highScore = 0;
+        }
+        //// Compare the player-robot score with the current high score by comparing playerInfo.money with current high score ////
+        // If the new score is higher:
+        if (playerInfo.money > highScore) {
+            // Set new high score object into localStorage 
+            localStorage.setItem("highScore", playerInfo.money);
+            // Set new player-robot's name object into localStorage
+            localStorage.setItem("name", playerInfo.name);
+            // Send player the message that they beat the high score
+            alert(playerInfo.name + " now has the high score of " + playerInfo.money + "!");
+        }
+        // If the old high score is higher:
+        else { 
+            // send player the message that the player did not beat the high score
+            alert(playerInfo.name + " did not beat the high score of " + highScore + ". Maybe next time!");
+        }
     }
     else {
-    window.alert("You've lost your robot in battle!");
+        window.alert("You've lost your robot in battle!");
     }
 
     // ask player if they'd like to play again
     var playAgainConfirm = window.confirm('Would you like to play again?');
 
     if (playAgainConfirm) {
-    startGame();
-    } else {
-    window.alert('Thank you for playing Robot Gladiators! Come back soon!');
+        startGame();
+    } 
+    else {
+        window.alert('Thank you for playing Robot Gladiators! Come back soon!');
     }
 };
 
